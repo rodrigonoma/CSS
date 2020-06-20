@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;500&display=swap" rel="stylesheet">
+    <title>Document</title>
+    <style>
+        body{
+            margin:0;
+            font-family: Poppins;
+            overflow: hidden;
+        }
+        #getApi{
+            width: 50%;
+            height: 500px;
+            background-color: rgb(44, 63, 240);
+            margin: 50px 0;
+            padding-top: 30px;
+            float: left;
+            box-sizing: border-box;
+        }
+        #getApi1{
+            width: 50%;
+            height: 500px;
+            background-color: rgb(72, 61, 173);
+            margin: 50px 0;
+            padding-top: 50px;
+            float: right;
+            box-sizing: border-box;
+        }
+        .bloco{
+            width: 250px;
+            height: 50px;
+            margin-top: 20px;
+            background-color: rgb(93, 116, 216);
+            position: relative; 
+            box-sizing: border-box;
+            border-radius: 25px;
+            border-bottom: 2px solid orange;
+            margin-left: 100px;
+            transition: all .5s ease-in-out;
+            z-index: 1;
+        }
+        .bloco:hover{            
+            transform: scale(1.2) translateX(600px);
+        }
+        .user{
+            width: 100%;
+            height: 100px;
+            margin: 0px 50px;
+        }
+        .user p{
+            width: 100%;
+            height: 10px;
+            font-size: 12px;
+            margin-top: 10px;
+            color:white;
+            font-weight: bold;
+        }
+        .user p:first-child{
+            padding-top: 5px;
+            margin-top: 10px;
+            color:orange;
+            font-weight: bold;
+        }
+        .img{
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            top:4px;
+            left: 2px;
+        }
+       .img img{            
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+        }
+        li{
+            list-style: none;
+            animation-name: up;
+            animation-iteration-count: infinite;
+            animation-direction: alternate-reverse;
+        }
+
+        @keyframes up {
+            0%{
+                transform: translateY(0) rotateZ(0);
+            }       
+            100%{
+                transform: translateY(-800px) rotateZ(960deg);
+            }         
+        }
+    </style>
+</head>
+<body>
+    <div id="getApi">
+    </div>
+    <div id="getApi1">
+    </div>
+    <ul>
+        <li></li>
+    </ul>
+    <script>
+        function getApi(){
+            const url = 'https://reqres.in/api/users?page=1';
+            fetch(url)
+            .then(function(response){
+                if(!response.ok){
+                    throw Error('Alguma coisa esta errada!')
+            }
+                return response.json();
+            })
+            .then(data => {
+                //console.log(data);
+                const html = data.data
+                .map(user=>{
+                    return `
+                        <div class=bloco>
+                            <div class=img>
+                                <img src='${user.avatar}'></img>
+                            </div>    
+                            <div class=user>
+                                <p>Nome: ${user.first_name} ${user.last_name}</p>
+                                <p>E-mail: ${user.email}</p>
+                            </div>
+                        </div>
+                    `;
+                })
+                .join("");
+                //console.log(html);
+                document.querySelector('#getApi')
+                .insertAdjacentHTML('afterbegin', html);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        }
+
+        function animacao(){
+            for (var i = 0; i <= 30; i++){
+                const li = document.createElement('li');
+                const ul = document.querySelector('ul');
+
+                var left = Math.random() * (1200 - 50) + 50;
+                var delay = Math.random() * (5 - 1) + 1;
+                var width = Math.random() * (100 - 10) + 1;
+                var duracao = Math.random() * (20 - 5) + 5;
+
+                console.log(left);
+
+                ul.style.margin = 0;
+                ul.style.padding = 0;
+                ul.style.overflow = 'hidden';
+
+                li.style.width = `${width}px`;
+                li.style.height = `${width}px`;
+                li.style.backgroundColor = 'white';
+                li.style.opacity = 0.2;
+                li.style.margin = 0;
+                li.style.display = 'inline-block';
+                li.style.position = 'absolute';
+                li.style.bottom = '-50px';
+                li.style.left = `${left}px`;
+                li.style.animationDelay = `${delay}s`;
+                li.style.animationDuration = `${duracao}s`;
+                
+                ul.appendChild(li);    
+            }
+        }
+        
+        getApi();
+        animacao();
+    </script>
+</body>
+</html>
